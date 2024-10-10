@@ -3,6 +3,7 @@ package com.example.javalab.service;
 import com.example.javalab.entities.InputProductData;
 import com.example.javalab.entities.Product;
 import com.example.javalab.entities.Category;
+import com.example.javalab.entities.ProductList;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Default;
 
@@ -15,13 +16,16 @@ import java.util.stream.Collectors;
 @ApplicationScoped
 @Default
 public class ImplWarehouse implements Warehouse {
-    private final List<Product> products = Collections.synchronizedList(new ArrayList<>());
-    private final List<Product> items = new CopyOnWriteArrayList<>();
+    private final ProductList productList;
 
-    //remove this later
     public ImplWarehouse() {
-        System.out.println("ImplWarehouse");
+        this.productList = new ProductList(new CopyOnWriteArrayList<>());
     }
+
+//    public ImplWarehouse(ProductList productList) {
+////        this.productList = productList;
+//        this.productList = new ProductList(new CopyOnWriteArrayList<>(productList.products()));
+//    }
 
     @Override
     public Product createNewProduct(InputProductData inputProductData) {
@@ -37,12 +41,12 @@ public class ImplWarehouse implements Warehouse {
 
     @Override
     public void addNewProduct(InputProductData inputProductData) {
-        products.add(createNewProduct(inputProductData));
+        productList.addProduct(createNewProduct(inputProductData));
     }
 
     @Override
     public List<Product> getProductList() {
-        return List.copyOf(items);
+        return Collections.unmodifiableList(productList.products());
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -55,7 +59,7 @@ public class ImplWarehouse implements Warehouse {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////
     @Override
     public Map<UUID, List<Product>> getProductsPerId() {
-        return groupingProducts(Product::id, items);
+        return groupingProducts(Product::id, productList.products());
     }
 
     @Override
@@ -70,7 +74,7 @@ public class ImplWarehouse implements Warehouse {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////
     @Override
     public Map<Category, List<Product>> getProductsPerCategory() {
-        return groupingProducts(Product::category, items);
+        return groupingProducts(Product::category, productList.products());
     }
 
     public record SortedProducts(List<Product> product) {

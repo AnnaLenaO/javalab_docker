@@ -2,7 +2,6 @@ package com.example.javalab.resource;
 
 import com.example.javalab.entities.Category;
 import com.example.javalab.entities.InputProductData;
-import com.example.javalab.entities.ProductList;
 import com.example.javalab.service.Warehouse;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
@@ -32,7 +31,7 @@ public class ProductResource {
 
     @POST
     @Path("/products")
-    @Consumes("application/json")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     public Response createProduct(InputProductData product) {
         warehouse.addNewProduct(product);
@@ -43,16 +42,15 @@ public class ProductResource {
     @GET
     @Path("/products")
     @Produces(MediaType.APPLICATION_JSON)
-    public ProductList allProducts() {
-        return new ProductList(warehouse.getProductList());
+    public Response getProducts() {
+        return Response.created(URI.create("/products"))
+                .entity(warehouse.getProductList()).build();
     }
 
     @GET
     @Path("/products/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getProduct(@PathParam("id") UUID id) {
-//        warehouse.getAProductForItsId(id);
-//        return Response.created(URI.create("/products/" + id)).build();
         return Response.created(URI.create("/products/" + id))
                 .entity(warehouse.getAProductForItsId(id)).build();
     }
