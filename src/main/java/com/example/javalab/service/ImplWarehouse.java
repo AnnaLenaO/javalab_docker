@@ -22,11 +22,6 @@ public class ImplWarehouse implements Warehouse {
         this.productList = new ProductList(new CopyOnWriteArrayList<>());
     }
 
-//    public ImplWarehouse(ProductList productList) {
-////        this.productList = productList;
-//        this.productList = new ProductList(new CopyOnWriteArrayList<>(productList.products()));
-//    }
-
     @Override
     public Product createNewProduct(InputProductData inputProductData) {
         return new Product(
@@ -100,6 +95,10 @@ public class ImplWarehouse implements Warehouse {
     @Override
     public SortedProducts getSortedProductsForACategory(Category category) {
         List<Product> productsForACategory = getProductsPerCategory().get(category);
+
+        if (productsForACategory == null) {
+            return new SortedProducts(Collections.emptyList());
+        }
 
         return productsForACategory.stream()
                 .filter(SortedProducts::productHasFirstLetter)

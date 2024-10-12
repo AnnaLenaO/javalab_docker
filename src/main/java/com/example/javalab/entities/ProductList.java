@@ -1,12 +1,9 @@
 package com.example.javalab.entities;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-//public record ProductList(List<Product> products) {
-//}
 public class ProductList {
     private final List<Product> products;
 
