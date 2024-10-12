@@ -3,6 +3,7 @@ package com.example.javalab.resource;
 import com.example.javalab.entities.Category;
 import com.example.javalab.entities.InputProductData;
 import com.example.javalab.entities.Product;
+import com.example.javalab.interceptor.Log;
 import com.example.javalab.service.ImplWarehouse;
 import com.example.javalab.service.Warehouse;
 import com.example.javalab.validate.ExistingCategory;
@@ -13,13 +14,20 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Path("/")
+@Log
 public class ProductResource {
+
+    private static final Logger logger = LoggerFactory.getLogger(Warehouse.class);
+
     private Warehouse warehouse;
 
     @Context
@@ -43,6 +51,9 @@ public class ProductResource {
 
         warehouse.addNewProduct(product);
 
+        logger.info("Product created: {}", product); /////////////////
+        logger.info("Product added to Warehouse: {}", product); /////////////
+
         if (proto == null) {
             proto = uriInfo.getRequestUri().getScheme();
         }
@@ -62,9 +73,13 @@ public class ProductResource {
     @Path("/products")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getProducts() {
+        List<Product> productList = warehouse.getProductList();
+        logger.info("Return {} products in list ", productList.size());
 
-        return Response.created(URI.create("/products"))
-                .entity(warehouse.getProductList()).build();
+        return Response.ok().entity(productList).build();
+
+//        return Response.created(URI.create("/products"))
+//                .entity(warehouse.getProductList()).build();
     }
 
     @GET
@@ -76,6 +91,8 @@ public class ProductResource {
         Optional<Product> product = warehouse.getAProductForItsId(productId);
 
         if (product.isEmpty()) {
+            logger.warn("No product with id: {}", id);
+
             return Response.status(Response.Status.NOT_FOUND)
                     .header("Custom-error", "Id does not exist. Try again").build();
         }
@@ -91,6 +108,8 @@ public class ProductResource {
                 (ImplWarehouse.SortedProducts) warehouse.getSortedProductsForACategory(category);
 
         if (categoryProducts.product().isEmpty()) {
+            logger.warn("No products with category: {}", category);
+
             return Response.status(Response.Status.NOT_FOUND)
                     .header("Custom-error", "Category has no products. Try again").build();
         }
