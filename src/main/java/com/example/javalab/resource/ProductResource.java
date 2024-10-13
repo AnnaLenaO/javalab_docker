@@ -46,8 +46,8 @@ public class ProductResource {
     @Path("/products")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createProduct(@Valid InputProductData product,
-                                  @HeaderParam("X-Forwarded-Proto") String proto) {
+    public Response addProduct(@Valid InputProductData product,
+                               @HeaderParam("X-Forwarded-Proto") String proto) {
 
         warehouse.addNewProduct(product);
 
