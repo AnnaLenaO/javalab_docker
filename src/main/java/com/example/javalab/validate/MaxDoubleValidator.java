@@ -12,7 +12,11 @@ public class MaxDoubleValidator implements ConstraintValidator<MaxDouble, Double
     public boolean isValid(Double input, ConstraintValidatorContext constraintValidatorContext) {
         logger.info("Validating rating: {}", input);
 
-//        return input <= 10.00;
+        if (input == null) {
+            logger.info("Null rating. No MaxDouble validation passed.");
+            return true;
+        }
+
         boolean isValid = input <= 10.00;
 
         if (!isValid) {
