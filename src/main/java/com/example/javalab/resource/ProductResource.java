@@ -51,8 +51,8 @@ public class ProductResource {
 
         warehouse.addNewProduct(product);
 
-        logger.info("Product created: {}", product); /////////////////
-        logger.info("Product added to Warehouse: {}", product); /////////////
+        logger.info("Product created: {}", product);
+        logger.info("Product added to Warehouse: {}", product);
 
         if (proto == null) {
             proto = uriInfo.getRequestUri().getScheme();
