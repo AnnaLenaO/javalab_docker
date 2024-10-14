@@ -158,12 +158,11 @@ class ProductResourceTest {
     void getForInvalidProductIdReturn404NotFound() throws URISyntaxException {
         UUID productId = UUID.randomUUID();
         String name = "Wasagaming";
-        Category category = RUGOSA;
         Double rating = 6.0;
         LocalDate createdAt = LocalDate.of(2024, 10, 13);
         LocalDate updatedAt = LocalDate.of(2024, 10, 13);
 
-        Product product = new Product(productId, name, category, rating, createdAt, updatedAt);
+        Product product = new Product(productId, name, RUGOSA, rating, createdAt, updatedAt);
         ProductList.addProduct(product);
         UUID invalidProductId = UUID.randomUUID();
 //
