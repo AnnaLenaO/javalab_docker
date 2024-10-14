@@ -77,9 +77,6 @@ public class ProductResource {
         logger.info("Return {} products in list ", productList.size());
 
         return Response.ok().entity(productList).build();
-
-//        return Response.created(URI.create("/products"))
-//                .entity(warehouse.getProductList()).build();
     }
 
     @GET

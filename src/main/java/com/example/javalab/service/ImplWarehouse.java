@@ -36,7 +36,7 @@ public class ImplWarehouse implements Warehouse {
 
     @Override
     public void addNewProduct(InputProductData inputProductData) {
-        productList.addProduct(createNewProduct(inputProductData));
+        ProductList.addProduct(createNewProduct(inputProductData));
     }
 
     @Override

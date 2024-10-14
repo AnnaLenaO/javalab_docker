@@ -5,14 +5,14 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ProductList {
-    private final List<Product> products;
+    private static List<Product> products;
 
     public ProductList(List<Product> products) {
 //        this.products = new ArrayList<>(products);
-        this.products = new CopyOnWriteArrayList<>();
+        ProductList.products = new CopyOnWriteArrayList<>();
     }
 
-    public void addProduct(Product newProduct) {
+    public static void addProduct(Product newProduct) {
         products.add(newProduct);
     }
 
