@@ -48,12 +48,11 @@ class ProductResourceTest {
 
         UUID id = UUID.fromString("d9104250-8222-496f-882b-a4e4c1a016f8");
         String name = "Wasagaming";
-        Category category = RUGOSA;
         Double rating = 6.0;
         LocalDate createdAt = LocalDate.of(2024, 10, 13);
         LocalDate updatedAt = LocalDate.of(2024, 10, 13);
 
-        Product product = new Product(id, name, category, rating, createdAt, updatedAt);
+        Product product = new Product(id, name, RUGOSA, rating, createdAt, updatedAt);
         ProductList.addProduct(product);
 
         ProductResource productResource = new ProductResource(service);
