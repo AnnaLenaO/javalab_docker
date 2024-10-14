@@ -1,8 +1,6 @@
 package com.example.javalab.exceptionmapper;
 
-import jakarta.ws.rs.WebApplicationException;
-
-public class IllegalRatingException extends WebApplicationException {
+public class IllegalRatingException extends RuntimeException {
 
     public IllegalRatingException() {
         super();

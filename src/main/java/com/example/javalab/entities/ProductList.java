@@ -8,7 +8,6 @@ public class ProductList {
     private static List<Product> products;
 
     public ProductList(List<Product> products) {
-//        this.products = new ArrayList<>(products);
         ProductList.products = new CopyOnWriteArrayList<>();
     }
 

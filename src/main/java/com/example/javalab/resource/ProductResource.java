@@ -73,6 +73,7 @@ public class ProductResource {
     @Path("/products")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getProducts() {
+
         List<Product> productList = warehouse.getProductList();
         logger.info("Return {} products in list ", productList.size());
 
@@ -82,7 +83,7 @@ public class ProductResource {
     @GET
     @Path("/products/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getProduct(@PathParam("id") @Valid UUID id) {
+    public Response getProductById(@PathParam("id") @Valid UUID id) {
 
         UUID productId = UUID.fromString(String.valueOf(id));
         Optional<Product> product = warehouse.getAProductForItsId(productId);
@@ -99,7 +100,7 @@ public class ProductResource {
     @GET
     @Path("/products/categories/{category}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getProductCategories(@PathParam("category") @ExistingCategory Category category) {
+    public Response getCategoryProducts(@PathParam("category") @ExistingCategory Category category) {
 
         ImplWarehouse.SortedProducts categoryProducts =
                 (ImplWarehouse.SortedProducts) warehouse.getSortedProductsForACategory(category);

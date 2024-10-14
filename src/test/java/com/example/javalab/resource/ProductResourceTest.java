@@ -47,16 +47,14 @@ class ProductResourceTest {
 
         Warehouse service = new ImplWarehouse();
 
-        UUID productId = UUID.randomUUID();
+        UUID id = UUID.fromString("d9104250-8222-496f-882b-a4e4c1a016f8");
         String name = "Wasagaming";
         Category category = RUGOSA;
         Double rating = 6.0;
-//        LocalDate createdAt = LocalDate.of(2024, 10, 13);
-//        LocalDate updatedAt = LocalDate.of(2024, 10, 13);
-        LocalDate createdAt = LocalDate.now();
-        LocalDate updatedAt = LocalDate.now();
+        LocalDate createdAt = LocalDate.of(2024, 10, 13);
+        LocalDate updatedAt = LocalDate.of(2024, 10, 13);
 
-        Product product = new Product(productId, name, category, rating, createdAt, updatedAt);
+        Product product = new Product(id, name, category, rating, createdAt, updatedAt);
         ProductList.addProduct(product);
 
         ProductResource productResource = new ProductResource(service);
@@ -113,6 +111,7 @@ class ProductResourceTest {
     @Test
     void getJsonRepresentProductList() throws URISyntaxException, UnsupportedEncodingException, JSONException {
         MockHttpRequest request = MockHttpRequest.get("/products");
+        //Do not include LocalDate:
         MockHttpResponse response = new MockHttpResponse();
         dispatcher.invoke(request, response);
 
@@ -120,14 +119,6 @@ class ProductResourceTest {
         System.out.println("Response content" + responseContent);
         String expectedJson = """
                 [{"product":{}}]""";
-
-//        String expectedJson = """
-//                [{"id": "%s",\s
-//                "name": "Wasagaming",\s
-//                "category": "RUGOSA",\s
-//                "rating": "6.0",\s
-//                "createdAt": "2024-10-13",\s
-//                "updatedAt": "2024-10-13"}]""";
 
         JSONArray expected = new JSONArray(expectedJson);
         JSONArray actual = new JSONArray(responseContent);
@@ -138,18 +129,11 @@ class ProductResourceTest {
 
     @Test
     void getProductListForProductIdReturn200ok() throws URISyntaxException {
-//        UUID productId = service.getProductList().get(0).id();
-        UUID productId = UUID.randomUUID();
-        String name = "Wasagaming";
-        Category category = RUGOSA;
-        Double rating = 6.0;
-        LocalDate createdAt = LocalDate.of(2024, 10, 13);
-        LocalDate updatedAt = LocalDate.of(2024, 10, 13);
-
-        Product product = new Product(productId, name, category, rating, createdAt, updatedAt);
-        ProductList.addProduct(product);
-
-        MockHttpRequest request = MockHttpRequest.get("/products/" + product.id());
+        MockHttpRequest request = MockHttpRequest.get("/products/" +
+                UUID.fromString("d9104250-8222-496f-882b-a4e4c1a016f8"));
+        //Generate expected failing test:
+//        MockHttpRequest request = MockHttpRequest.get("/products/" +
+//                UUID.fromString("d9104250-8222-496f-882b-a4e4c1a016f1"));
         MockHttpResponse response = new MockHttpResponse();
         dispatcher.invoke(request, response);
 
@@ -168,8 +152,13 @@ class ProductResourceTest {
         Product product = new Product(productId, name, category, rating, createdAt, updatedAt);
         ProductList.addProduct(product);
         UUID invalidProductId = UUID.randomUUID();
-
+//
         MockHttpRequest request = MockHttpRequest.get("/products/" + invalidProductId);
+        //Generate expected failing test:
+//        MockHttpRequest request = MockHttpRequest.get("/products/" + product.id());
+        //Generate false positive test:
+//        MockHttpRequest request = MockHttpRequest.get("/products" +
+//                UUID.fromString("d9104250-8222-496f-882b-a4e4c1a016f8"));
         MockHttpResponse response = new MockHttpResponse();
         dispatcher.invoke(request, response);
 
@@ -178,7 +167,7 @@ class ProductResourceTest {
 
     @Test
     void getProductListForProductIdHaveValidAnnotationOnUUIDParameter() throws NoSuchMethodException {
-        Method method = ProductResource.class.getMethod("getProduct", UUID.class);
+        Method method = ProductResource.class.getMethod("getProductById", UUID.class);
         Parameter[] parameters = method.getParameters();
         boolean isAnnotationPresent = parameters[0].isAnnotationPresent(Valid.class);
 
@@ -187,17 +176,7 @@ class ProductResourceTest {
 
     @Test
     void getProductListForProductCategoryReturn200ok() throws URISyntaxException {
-        UUID productId = UUID.randomUUID();
-        String name = "Wasagaming";
-        Category category = RUGOSA;
-        Double rating = 6.0;
-        LocalDate createdAt = LocalDate.of(2024, 10, 13);
-        LocalDate updatedAt = LocalDate.of(2024, 10, 13);
-
-        Product product = new Product(productId, name, category, rating, createdAt, updatedAt);
-        ProductList.addProduct(product);
-
-        MockHttpRequest request = MockHttpRequest.get("/products/categories/" + product.category());
+        MockHttpRequest request = MockHttpRequest.get("/products/categories/" + RUGOSA);
         MockHttpResponse response = new MockHttpResponse();
         dispatcher.invoke(request, response);
 
@@ -206,16 +185,6 @@ class ProductResourceTest {
 
     @Test
     void getForInvalidProductCategoryReturn404NotFound() throws URISyntaxException {
-        UUID productId = UUID.randomUUID();
-        String name = "Wasagaming";
-        Category category = RUGOSA;
-        Double rating = 6.0;
-        LocalDate createdAt = LocalDate.of(2024, 10, 13);
-        LocalDate updatedAt = LocalDate.of(2024, 10, 13);
-
-        Product product = new Product(productId, name, category, rating, createdAt, updatedAt);
-        ProductList.addProduct(product);
-
         MockHttpRequest request = MockHttpRequest.get("/products/categories/" + CANADIAN);
         MockHttpResponse response = new MockHttpResponse();
         dispatcher.invoke(request, response);
@@ -225,7 +194,7 @@ class ProductResourceTest {
 
     @Test
     void getProductListForProductCategoryHaveValidAnnotationOnCategoryParameter() throws NoSuchMethodException {
-        Method method = ProductResource.class.getMethod("getProductCategories", Category.class);
+        Method method = ProductResource.class.getMethod("getCategoryProducts", Category.class);
         Parameter[] parameters = method.getParameters();
         boolean isAnnotationPresent = parameters[0].isAnnotationPresent(ExistingCategory.class);
 

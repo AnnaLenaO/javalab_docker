@@ -126,6 +126,12 @@
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
             <version>2.18.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.nosql</groupId>
+            <artifactId>jakarta.nosql-api</artifactId>
+            <version>1.0.0-M1</version>
         </dependency>
 
     </dependencies>
